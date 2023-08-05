@@ -5,7 +5,7 @@ import { Users } from "../models/User"
 import { catchError } from "../utils/catchError";
 import { APIError } from "../utils/apiError";
 
-export class UserServices {
+export class AuthServices {
 
     register = async (userData: Users): Promise<Users> => {
         const hashPassword = bcrypt.hashSync(userData.password, 12);
