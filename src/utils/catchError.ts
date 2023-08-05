@@ -1,8 +1,8 @@
-export const catchError = async (Promiss: unknown) => {
+export const catchError = async <T>(promise: Promise<T>): Promise<T> => {
     try {
-        return await Promiss
+        return await promise;
     } catch (error) {
         console.log(`Error: ${error}`);
-        throw error
+        throw error;
     }
-}
+};
