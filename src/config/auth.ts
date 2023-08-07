@@ -24,10 +24,10 @@ export const protectRoute = asyncHandler(async (req: AuthenticatedRequest, res: 
     if (!decode) return next(new APIError("Invalid token", 401));
 
     const { rows } = await catchError(pool.query<Users>(
-        `SECLECT * FROM users WHERE id = $1`, [decode.userId]
+        `SELECT * FROM users WHERE user_id = $1`, [decode.user_id]
     ));
+
     if (rows.length === 0) return next(new APIError("Your not register!", 404));
-    console.log(rows[0]);
     req.user = rows[0];
     next();
 });

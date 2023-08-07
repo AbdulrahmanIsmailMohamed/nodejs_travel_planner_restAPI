@@ -22,7 +22,7 @@ export class AuthController {
         const newUser = await this.authService.register(userData);
         if (!newUser) return next(new APIError("Can't Created Your data!", 400))
 
-        res.status(201).json({ newUser, token: token(newUser.id) })
+        res.status(201).json({ newUser, token: token(newUser.user_id) })
     });
 
     login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +31,7 @@ export class AuthController {
         const user = await this.authService.login(email, password);
         if (!user) return next(new APIError("Invalid email or password", 401));
 
-        res.status(200).json({ user, token: token(user.id) })
+        res.status(200).json({ user, token: token(user.user_id) })
     });
 
 }

@@ -3,6 +3,7 @@ export interface Destination {
     description: string,
     country: string,
     city: string,
-    id?: string,
-    imageUrl?: string
+    user_id: string
+    destination_id?: string,
+    image_url?: string
 }
