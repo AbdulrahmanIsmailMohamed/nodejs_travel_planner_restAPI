@@ -48,7 +48,7 @@ export class DestinationService {
         ));
         return rows[0];
     }
-
+    
     getDestinations = async (userId: string): Promise<Destination[]> => {
         const { rows } = await catchError(pool.query<Destination>(
             `SELECT * FROM destination WHERE user_id = $1;`,

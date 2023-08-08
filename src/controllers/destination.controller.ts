@@ -14,7 +14,6 @@ export class DestinationController {
     createDestination = asyncHandler(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         if (req.user) {
             const newDestination = await this.destinationService.createDestination({ ...req.body, user_id: req.user.user_id });
-            console.log(newDestination, !newDestination);
 
             if (!newDestination) return next(new APIError("Can't create your destination", 400));
             res.status(201).json({ status: "Success", Destination: newDestination });
