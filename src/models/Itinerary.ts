@@ -8,7 +8,6 @@ export interface Itineraries {
 }
 
 interface Activities {
-    activity_id?: string,
     name: string,
     place: string
 }

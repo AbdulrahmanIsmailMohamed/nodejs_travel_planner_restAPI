@@ -2,16 +2,22 @@ import { Router } from "express";
 
 import { ItineraryController } from "../controllers/itinerary.controller";
 
+import {
+    createItineraryValidator,
+    itineraryIdValidator,
+    updateItineraryValidator
+} from "../utils/validators/itinerary.validator";
+
 const router = Router();
 const itineraryController = new ItineraryController()
 
-router.post("/", itineraryController.createItinerary)
+router.post("/", createItineraryValidator, itineraryController.createItinerary)
 
 router
     .route("/:itineraryId")
-    .get(itineraryController.getItinerary)
-    .patch(itineraryController.updateItinerary)
-    .delete(itineraryController.deleteItinerary)
+    .get(itineraryIdValidator, itineraryController.getItinerary)
+    .patch(updateItineraryValidator, itineraryController.updateItinerary)
+    .delete(itineraryIdValidator, itineraryController.deleteItinerary)
 
 router.get("/get/:destinationId", itineraryController.getItineraries)
 
