@@ -4,7 +4,7 @@ export interface Itineraries {
     date: string,
     name_of_day: string,
     activities: Array<Activities>,
-    itinerary_id: string
+    itinerary_id?: string
 }
 
 interface Activities {

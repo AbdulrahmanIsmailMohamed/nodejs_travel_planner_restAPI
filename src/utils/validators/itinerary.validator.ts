@@ -88,7 +88,7 @@ export const updateItineraryValidator = [
         .optional()
         .isLength({ min: 2 })
         .withMessage("Name of the day must be at least 2 char")
-        .isLength({ min: 150 })
+        .isLength({ max: 150 })
         .withMessage("Name of the day must be at most 150 char"),
 
     check("activities")
