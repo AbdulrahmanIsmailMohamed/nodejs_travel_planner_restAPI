@@ -51,18 +51,19 @@ export class DestinationService {
         return rows[0];
     }
 
-    getDestinations = async (userId: string, page: number, pageSize: number): Promise<PaginationResult<Destination>> => {
-        const query = `SELECT * FROM destination WHERE user_id = $1`;
+    getDestinations = async (userId: string, page: number, pageSize: number, keyword?: string): Promise<PaginationResult<Destination>> => {
+        let query: string;
+
+        if (keyword) {
+            query = `SELECT * FROM destination WHERE name LIKE '%${keyword}%' AND user_id = $1`
+        } else {
+            query = `SELECT * FROM destination WHERE user_id = $1`;
+        }
+
         const values = [userId];
-        const paginationResult: PaginationResult<Destination> = await paginate(page, pageSize, query, values);        
+        const paginationResult: PaginationResult<Destination> = await paginate(page, pageSize, query, values);
 
-        return paginationResult
+        return paginationResult;
     }
-
-    // search = async (keyword: string) => {
-    //     const { rows } = await catchError(pool.query<Destination>(
-    //         ``
-    //     ))
-    // }
 
 }

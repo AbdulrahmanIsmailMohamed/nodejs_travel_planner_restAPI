@@ -49,16 +49,17 @@ export class DestinationController {
     getDestinations = asyncHandler(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         if (req.user) {
             const user_id = req.user.user_id!
-            const page: number = parseInt(req.query.page as string);
-            const pageSize: number = parseInt(req.query.pageSize as string);
-
-            const result = await this.destinationService.getDestinations(user_id, page, pageSize);
+            const page: number = parseInt(req.query.page as string) || 1;
+            const pageSize: number = parseInt(req.query.pageSize as string) || 10;
+            const keyword = req.query.keyword ? req.query.keyword.toString() : undefined;
+            
+            const result = await this.destinationService.getDestinations(user_id, page, pageSize, keyword);
             if (!result) return next(new APIError("Your destinations not exist", 404));
             res.status(200).json({
                 status: "Success",
                 Destinations: result.data,
-                Pagination:{
-                    Total:result.total,
+                Pagination: {
+                    Total: result.total,
                     currentPage: result.currentPage,
                     NextPage: result.nextPage,
                     PreviousPage: result.previousPage,
