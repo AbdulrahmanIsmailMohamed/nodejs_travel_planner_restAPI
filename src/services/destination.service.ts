@@ -1,6 +1,8 @@
 import { pool } from "../db/connect"
+import { PaginationResult } from "../interfaces/pagination.interface";
 import { Destination } from "../models/Destination"
 import { catchError } from "../utils/catchError"
+import { paginate } from "../utils/pagination";
 
 export class DestinationService {
     createDestination = async (destinationBody: Destination): Promise<Destination> => {
@@ -30,7 +32,7 @@ export class DestinationService {
         return rows[0];
     }
 
-    deleteDestination = async (destination_id: string, user_id: string): Promise<Destination> => {        
+    deleteDestination = async (destination_id: string, user_id: string): Promise<Destination> => {
         const { rows } = await catchError(pool.query<Destination>(
             `DELETE FROM destination
             WHERE destination_id = $1 AND user_id = $2
@@ -48,13 +50,19 @@ export class DestinationService {
         ));
         return rows[0];
     }
-    
-    getDestinations = async (userId: string): Promise<Destination[]> => {
-        const { rows } = await catchError(pool.query<Destination>(
-            `SELECT * FROM destination WHERE user_id = $1;`,
-            [userId]
-        ));
-        return rows;
+
+    getDestinations = async (userId: string, page: number, pageSize: number): Promise<PaginationResult<Destination>> => {
+        const query = `SELECT * FROM destination WHERE user_id = $1`;
+        const values = [userId];
+        const paginationResult: PaginationResult<Destination> = await paginate(page, pageSize, query, values);        
+
+        return paginationResult
     }
+
+    // search = async (keyword: string) => {
+    //     const { rows } = await catchError(pool.query<Destination>(
+    //         ``
+    //     ))
+    // }
 
 }

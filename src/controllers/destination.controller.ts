@@ -49,10 +49,21 @@ export class DestinationController {
     getDestinations = asyncHandler(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         if (req.user) {
             const user_id = req.user.user_id!
+            const page: number = parseInt(req.query.page as string);
+            const pageSize: number = parseInt(req.query.pageSize as string);
 
-            const destinations = await this.destinationService.getDestinations(user_id);
-            if (!destinations) return next(new APIError("Your destinations not exist", 404));
-            res.status(200).json({ status: "Success", destinations });
+            const result = await this.destinationService.getDestinations(user_id, page, pageSize);
+            if (!result) return next(new APIError("Your destinations not exist", 404));
+            res.status(200).json({
+                status: "Success",
+                Destinations: result.data,
+                Pagination:{
+                    Total:result.total,
+                    currentPage: result.currentPage,
+                    NextPage: result.nextPage,
+                    PreviousPage: result.previousPage,
+                }
+            });
         }
 
         else next(new APIError("You're not register, please login!", 401));
