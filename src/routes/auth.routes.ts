@@ -8,5 +8,8 @@ const authController = new AuthController();
 router
     .post("/register", registerValidator, authController.register)
     .post("/login", loginValidator, authController.login)
+    .post("/forgot-password", authController.forgotPassword)
+    .post("/verify-code", authController.verifyCode)
+    .post("/change-password", authController.changePassword)
 
 export default router;
