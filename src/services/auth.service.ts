@@ -27,12 +27,6 @@ export class AuthServices {
     }
 
     forgotPassword = async (email: string): Promise<string> => {
-        const { rows } = await catchError(pool.query<Users>(
-            `SELECT * FROM users WHERE email = $1;`,
-            [email]
-        ));
-        if (rows.length === 0) throw new APIError("Your email not exist, please register", 401);
-
         // Generate hash reset random 6 digits and save via db
         const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
         const resetCodeExpire = new Date(Date.now() + 10 * 60 * 1000);

@@ -45,10 +45,55 @@ export const loginValidator = [
         .withMessage("Invalid email format!")
         .custom(async (val) => {
             const { rows } = await catchError(pool.query<Users>(`SELECT * FROM users WHERE email = $1`, [val]))
-            
+
             if (rows.length !== 0) return true;
             throw new APIError("Your email is not exist, please register!", 404);
         }),
+
+    check("password")
+        .isString()
+        .withMessage("Password must be string")
+        .isStrongPassword({
+            minLength: 6,
+            minLowercase: 1,
+            minNumbers: 4,
+            minUppercase: 1,
+            minSymbols: 1
+        }),
+
+    validatorMW
+];
+
+export const forgotPasswordValidator = [
+    check("email")
+        .isEmail()
+        .withMessage("Invalid email format!")
+        .custom(async (val) => {
+            const { rows } = await catchError(pool.query<Users>(`SELECT * FROM users WHERE email = $1`, [val]))
+
+            if (rows.length !== 0) return true;
+            throw new APIError("Your email is not exist, please register!", 404);
+        }),
+
+    validatorMW
+];
+
+export const verifyCodeValidator = [
+    check("email")
+        .isEmail()
+        .withMessage("Invalid email format!")
+        .custom(async (val) => {
+            const { rows } = await catchError(pool.query<Users>(`SELECT * FROM users WHERE email = $1`, [val]))
+
+            if (rows.length !== 0) return true;
+            throw new APIError("Your email is not exist, please register!", 404);
+        }),
+
+    check("resetCode")
+        .notEmpty()
+        .withMessage("Reset Code Must be noy null")
+        .isString()
+        .withMessage("Reset Code must be string"),
 
     validatorMW
 ];
