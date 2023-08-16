@@ -10,7 +10,7 @@
       <a href="#key-features">Key Features</a>
     </li>
     <li>
-      <a href="#build-with">Build With</a>
+      <a href="#build-with">Built With</a>
     </li>
     <li>
       <a href="#installation">Installation</a>
