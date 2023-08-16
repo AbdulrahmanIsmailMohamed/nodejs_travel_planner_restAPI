@@ -8,10 +8,13 @@ import {
     updateItineraryValidator
 } from "../utils/validators/itinerary.validator";
 
-const router = Router();
-const itineraryController = new ItineraryController()
+const router = Router({ mergeParams: true });
+const itineraryController = new ItineraryController();
 
-router.post("/", createItineraryValidator, itineraryController.createItinerary)
+router
+    .route("/")
+    .post(createItineraryValidator, itineraryController.createItinerary)
+    .get(itineraryController.getItineraries) // nested route
 
 router
     .route("/:itineraryId")

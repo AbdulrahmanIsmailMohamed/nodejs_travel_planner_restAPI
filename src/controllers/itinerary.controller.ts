@@ -4,6 +4,7 @@ import { NextFunction, Response } from 'express';
 import { ItineraryService } from '../services/itinerary.service';
 import { AuthenticatedRequest } from '../interfaces/authentication.interface';
 import { APIError } from '../utils/apiError';
+import { Sort } from '../types/sorting.types';
 
 export class ItineraryController {
     public itinerary: ItineraryService
@@ -69,10 +70,23 @@ export class ItineraryController {
         if (req.user!) {
             const user_id = req.user.user_id!
             const destination_id = req.params.destinationId
+            const page: number = parseInt(req.query.page as string) || 1;
+            const pageSize: number = parseInt(req.query.pageSize as string) || 10;
+            const sort = req.query.sort as Sort
 
-            const itineraries = await this.itinerary.getItineraries(destination_id, user_id)
-            if (!itineraries) return next(new APIError("Your itinerary not exist!", 404));
-            res.status(200).json({ status: "Success", itineraries });
+            const result = await this.itinerary.getItineraries(destination_id, user_id, page, pageSize, sort)
+            if (!result) return next(new APIError("Your itinerary not exist!", 404));
+
+            res.status(200).json({
+                status: "Success",
+                itineraries: result.data,
+                Pagination: {
+                    Total: result.total,
+                    currentPage: result.currentPage,
+                    NextPage: result.nextPage,
+                    PreviousPage: result.previousPage,
+                }
+            });
         }
 
         else return next(new APIError("you're not register", 401))

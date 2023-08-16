@@ -1,6 +1,9 @@
 import { pool } from '../db/connect';
+import { PaginationResult } from '../interfaces/pagination.interface';
 import { Itineraries } from '../models/Itinerary';
+import { Sort } from '../types/sorting.types';
 import { catchError } from '../utils/catchError';
+import { paginate } from '../utils/pagination';
 
 export class ItineraryService {
     createItinerary = async (itineraryBody: Itineraries) => {
@@ -50,12 +53,23 @@ export class ItineraryService {
         return rows[0];
     }
 
-    getItineraries = async (destination_id: string, user_id: string) => {
-        const { rows } = await catchError(pool.query<Itineraries>(
-            `SELECT * FROM itinerary WHERE user_id = $1 AND destination_id = $2`,
-            [user_id, destination_id]
-        ));
+    getItineraries = async (
+        destination_id: string,
+        user_id: string,
+        page: number,
+        pageSize: number,
+        sort?: Sort
+    ): Promise<PaginationResult<Itineraries>> => {
+        const sortingClause = sort === "ASC" ? "ORDER BY date ASC" : sort === "DESC" ? "ORDER BY date DESC" : "";
+        const query = `
+          SELECT * FROM itinerary
+          WHERE user_id = $1 AND destination_id = $2
+          ${sortingClause}
+        `;
 
-        return rows;
+        const values: Array<string> = [user_id, destination_id]
+        const paginationResult = await paginate<Itineraries>(page, pageSize, query, values)
+
+        return paginationResult;
     }
 }

@@ -1,10 +1,19 @@
 import { Router } from "express";
 
 import { DestinationController } from "../controllers/destination.controller";
-import { createDestinationValidator, deleteDestinationValidator, destinationIdValidator, updateDestinationValidator } from "../utils/validators/destination.validator";
+import itineraryRoutes from "./itinerary.routes";
+
+import {
+    createDestinationValidator,
+    deleteDestinationValidator,
+    destinationIdValidator,
+    updateDestinationValidator
+} from "../utils/validators/destination.validator";
 
 const router = Router();
 const destinationController = new DestinationController()
+
+router.use("/:destinationId/itineraries", itineraryRoutes)
 
 router
     .route("/")

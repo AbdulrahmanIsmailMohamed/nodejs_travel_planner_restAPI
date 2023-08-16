@@ -53,15 +53,16 @@ export class DestinationService {
 
     getDestinations = async (userId: string, page: number, pageSize: number, keyword?: string): Promise<PaginationResult<Destination>> => {
         let query: string;
+        let values: Array<any> = [userId];
 
         if (keyword) {
-            query = `SELECT * FROM destination WHERE name LIKE '%${keyword}%' AND user_id = $1`
+            query = `SELECT * FROM destination WHERE name LIKE $2 AND user_id = $1`;
+            values.push(`%${keyword}%`);
         } else {
             query = `SELECT * FROM destination WHERE user_id = $1`;
         }
 
-        const values = [userId];
-        const paginationResult: PaginationResult<Destination> = await paginate(page, pageSize, query, values);
+        const paginationResult = await paginate<Destination>(page, pageSize, query, values);
 
         return paginationResult;
     }
