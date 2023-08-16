@@ -4,6 +4,7 @@ import { ItineraryController } from "../controllers/itinerary.controller";
 
 import {
     createItineraryValidator,
+    itinerariesValidator,
     itineraryIdValidator,
     updateItineraryValidator
 } from "../utils/validators/itinerary.validator";
@@ -14,7 +15,7 @@ const itineraryController = new ItineraryController();
 router
     .route("/")
     .post(createItineraryValidator, itineraryController.createItinerary)
-    .get(itineraryController.getItineraries) // nested route
+    .get(itinerariesValidator, itineraryController.getItineraries) // nested route
 
 router
     .route("/:itineraryId")
@@ -22,6 +23,6 @@ router
     .patch(updateItineraryValidator, itineraryController.updateItinerary)
     .delete(itineraryIdValidator, itineraryController.deleteItinerary)
 
-router.get("/get/:destinationId", itineraryController.getItineraries)
+router.get("/get/:destinationId", itinerariesValidator, itineraryController.getItineraries)
 
 export default router;

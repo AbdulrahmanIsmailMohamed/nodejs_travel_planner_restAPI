@@ -106,3 +106,21 @@ export const updateItineraryValidator = [
 
     validatorMW
 ];
+
+export const itinerariesValidator = [
+    check("destinationId")
+        .isUUID()
+        .withMessage("Invalid Itinerary id format!!")
+        .custom(async (val, { req }) => {
+            const { rows } = await catchError(pool.query<Itineraries>(
+                `SELECT * FROM destination
+             WHERE destination_id = $1 AND user_id = $2;`,
+                [val, req.user.user_id]
+            ));
+
+            if (rows.length === 0) throw new APIError("Destination not exist", 404);
+            return true;
+        }),
+
+    validatorMW
+]
